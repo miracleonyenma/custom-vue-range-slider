@@ -30,6 +30,8 @@ const emit = defineEmits(["update:minValue", "update:maxValue"]);
 
 // define refs for the slider element and the slider values
 const slider = ref(null);
+const inputMin = ref(null);
+const inputMax = ref(null);
 const sliderMinValue = ref(minValue);
 const sliderMaxValue = ref(maxValue);
 
@@ -67,10 +69,32 @@ watchEffect(() => {
     setCSSProps(differencePercent, leftPercent, rightPercent);
   }
 });
+
+// fix UI problem -> max slider was always on the top. Not perfect but more intuitive
+// validation sliderMinValue do not greater than sliderMaxValue and opposite
+const onInput = ({ target }) => {
+
+  inputMin.value.style.setProperty('z-index', target.name === 'min' ? 1 : 0);
+  inputMax.value.style.setProperty('z-index', target.name === 'max' ? 1 : 0);
+
+  if (target.name === 'min') {
+    target.value > sliderMaxValue.value
+      ? target.value = sliderMaxValue.value
+      : sliderMinValue.value = parseFloat(target.value);
+  }
+
+  if (target.name === 'max') {
+    target.value < sliderMinValue.value
+      ? target.value = sliderMinValue.value
+      : sliderMaxValue.value = parseFloat(target.value);
+  }
+};
+
 </script>
 <template>
   <div ref="slider" class="custom-slider minmax">
     <input
+      ref="inputMin"
       type="range"
       name="min"
       id="min"
@@ -78,9 +102,10 @@ watchEffect(() => {
       :max="max"
       :value="minValue"
       :step="step"
-      @input="({ target }) => (sliderMinValue = parseFloat(target.value))"
+      @input="onInput"
     />
     <input
+      ref="inputMax"
       type="range"
       name="max"
       id="max"
@@ -88,7 +113,7 @@ watchEffect(() => {
       :max="max"
       :value="maxValue"
       :step="step"
-      @input="({ target }) => (sliderMaxValue = parseFloat(target.value))"
+      @input="onInput"
     />
   </div>
   <div class="minmax-inputs">
