@@ -61,7 +61,7 @@ watchEffect(() => {
 });
 </script>
 <template>
-  <div class="custom-slider">
+  <div class="custom-slider default">
     <input
       ref="slider"
       :value="sliderValue"

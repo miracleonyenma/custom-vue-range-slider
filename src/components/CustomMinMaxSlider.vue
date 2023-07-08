@@ -46,8 +46,7 @@ const sliderDifference = computed(() => {
 });
 
 // function to set the css variables for width, left and right
-const setCSSProps = (width, left, right) => {
-  slider.value.style.setProperty("--width", `${width}%`);
+const setCSSProps = (left, right) => {
   slider.value.style.setProperty("--progressLeft", `${left}%`);
   slider.value.style.setProperty("--progressRight", `${right}%`);
 };
@@ -61,22 +60,16 @@ watchEffect(() => {
     emit("update:maxValue", sliderMaxValue.value);
 
     // calculate values in percentages
-    const differencePercent = getPercent(sliderDifference.value, min, max);
     const leftPercent = getPercent(sliderMinValue.value, min, max);
     const rightPercent = 100 - getPercent(sliderMaxValue.value, min, max);
 
     // set the CSS variables
-    setCSSProps(differencePercent, leftPercent, rightPercent);
+    setCSSProps(leftPercent, rightPercent);
   }
 });
 
-// fix UI problem -> max slider was always on the top. Not perfect but more intuitive
 // validation sliderMinValue do not greater than sliderMaxValue and opposite
 const onInput = ({ target }) => {
-
-  inputMin.value.style.setProperty('z-index', target.name === 'min' ? 1 : 0);
-  inputMax.value.style.setProperty('z-index', target.name === 'max' ? 1 : 0);
-
   if (target.name === 'min') {
     target.value > sliderMaxValue.value
       ? target.value = sliderMaxValue.value
@@ -93,6 +86,7 @@ const onInput = ({ target }) => {
 </script>
 <template>
   <div ref="slider" class="custom-slider minmax">
+    <div class="minmax-indicator"></div>
     <input
       ref="inputMin"
       type="range"

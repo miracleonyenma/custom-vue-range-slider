@@ -7,8 +7,8 @@ import CustomMinMaxSlider from "./components/CustomMinMaxSlider.vue";
 const slider1 = ref(100);
 const slider2 = ref(0);
 
-const sliderMin = ref(50);
-const sliderMax = ref(80);
+const sliderMin = ref(65);
+const sliderMax = ref(150);
 </script>
 <template>
   <div class="slider-cont">
@@ -28,7 +28,8 @@ const sliderMax = ref(80);
   <div class="slider-cont">
     <h3>Slider 3: {{ sliderMin }} - {{ sliderMax }}</h3>
     <CustomMinMaxSlider
-      :max="700"
+      :min="65"
+      :max="368"
       v-model:min-value="sliderMin"
       v-model:max-value="sliderMax"
     />
